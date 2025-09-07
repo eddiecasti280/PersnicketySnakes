@@ -52,4 +52,4 @@ Five total actions that can be taken.
 - Concept: Multiple snakes may be part of a level with their respective spawn points. Each snake will move with each input, simultaneously.
 - Visual: If needed, have the snakes be slightly different shades to avoid confusion for the player.
 - Learning: The player will need to take advantage of using walls to stop snake movement so that the other snake can move in a different direction or use the food gauge to their advantage.
-- Progression: The mechanic will be introduced a few levels into the game once the player has familiarized themselves with the first few mechanics.
+- Progression: The mechanic will be introduced a few levels into the game once the player has familiarized themselves with the first few mechanics. More snakes can be controllable to increase game complexity.
