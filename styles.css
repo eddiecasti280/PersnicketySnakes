@@ -1,0 +1,538 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+}
+
+.game-container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    max-width: 800px;
+    width: 100%;
+}
+
+.game-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.game-header h1 {
+    color: #4a5568;
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.level-info {
+    font-size: 1.2em;
+    color: #718096;
+    font-weight: bold;
+}
+
+.game-area {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: flex-start;
+    margin-bottom: 30px;
+}
+
+.game-grid {
+    display: grid;
+    gap: 2px;
+    background: #e2e8f0;
+    padding: 10px;
+    border-radius: 10px;
+    border: 3px solid #4a5568;
+}
+
+.grid-cell {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2em;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.grid-cell.empty {
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+}
+
+.grid-cell.snake {
+    background: #48bb78;
+    color: white;
+    box-shadow: 0 2px 8px rgba(72, 187, 120, 0.3);
+    animation: pulse 1.5s infinite;
+}
+
+.grid-cell.snake2 {
+    background: #ed8936;
+    color: white;
+    box-shadow: 0 2px 8px rgba(237, 137, 54, 0.3);
+    animation: pulse 1.5s infinite;
+}
+
+.grid-cell.goal {
+    background: #ed8936;
+    color: white;
+    box-shadow: 0 2px 8px rgba(237, 137, 54, 0.3);
+    animation: glow 2s infinite;
+}
+
+.grid-cell.goal2 {
+    background: #9f7aea;
+    color: white;
+    box-shadow: 0 2px 8px rgba(159, 122, 234, 0.3);
+    animation: glow 2s infinite;
+}
+
+.grid-cell.spawn {
+    background: #4299e1;
+    color: white;
+    box-shadow: 0 2px 8px rgba(66, 153, 225, 0.3);
+}
+
+.grid-cell.spawn2 {
+    background: #ed8936;
+    color: white;
+    box-shadow: 0 2px 8px rgba(237, 137, 54, 0.3);
+}
+
+.grid-cell.obstacle {
+    background: #2d3748;
+    color: white;
+}
+
+.grid-cell.removable-obstacle {
+    background: #e53e3e;
+    color: white;
+    border: 2px solid #c53030;
+    animation: removable-pulse 1.5s infinite;
+}
+
+.grid-cell.removable-obstacle:hover {
+    background: #c53030;
+    transform: scale(1.05);
+}
+
+@keyframes removable-pulse {
+    0%, 100% { 
+        box-shadow: 0 2px 8px rgba(229, 62, 62, 0.3);
+    }
+    50% { 
+        box-shadow: 0 4px 16px rgba(229, 62, 62, 0.6);
+    }
+}
+
+.grid-cell.fruit {
+    background: #fbb6ce;
+    color: #e53e3e;
+    border: 2px solid #fc8181;
+    animation: fruit-glow 2s infinite;
+}
+
+@keyframes fruit-glow {
+    0%, 100% { 
+        box-shadow: 0 2px 8px rgba(251, 182, 206, 0.3);
+        transform: scale(1);
+    }
+    50% { 
+        box-shadow: 0 4px 16px rgba(251, 182, 206, 0.6);
+        transform: scale(1.05);
+    }
+}
+
+.grid-cell.trail {
+    background: #90cdf4;
+    color: #2b6cb0;
+    border: 1px solid #63b3ed;
+    animation: trail-pulse 2s infinite;
+}
+
+.grid-cell.trail2 {
+    background: #fbb6ce;
+    color: #97266d;
+    border: 1px solid #f687b3;
+    animation: trail-pulse 2s infinite;
+}
+
+@keyframes trail-pulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+@keyframes glow {
+    0%, 100% { box-shadow: 0 2px 8px rgba(237, 137, 54, 0.3); }
+    50% { box-shadow: 0 2px 16px rgba(237, 137, 54, 0.6); }
+}
+
+.energy-panel {
+    background: #f7fafc;
+    border-radius: 10px;
+    padding: 20px;
+    border: 2px solid #e2e8f0;
+    min-width: 200px;
+}
+
+.energy-panel h3 {
+    text-align: center;
+    color: #4a5568;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.energy-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 30px);
+    grid-template-rows: repeat(2, 30px);
+    gap: 3px;
+    margin-bottom: 15px;
+    justify-content: center;
+}
+
+.energy-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.energy-label {
+    font-size: 0.8em;
+    font-weight: bold;
+    color: #4a5568;
+    margin-bottom: 5px;
+}
+
+.energy-tile {
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    border: 1px solid #cbd5e0;
+    transition: all 0.3s ease;
+}
+
+.energy-tile.available {
+    background: #68d391;
+    border-color: #48bb78;
+}
+
+.energy-tile.used {
+    background: #e2e8f0;
+    border-color: #a0aec0;
+}
+
+.energy-info {
+    text-align: center;
+    font-weight: bold;
+    color: #4a5568;
+}
+
+.controls {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.control-buttons {
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.control-btn {
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+    border: none;
+    border-radius: 10px;
+    background: #4299e1;
+    color: white;
+    font-size: 1.5em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(66, 153, 225, 0.3);
+}
+
+.control-btn:hover {
+    background: #3182ce;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(66, 153, 225, 0.4);
+}
+
+.control-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(66, 153, 225, 0.3);
+}
+
+.control-btn:disabled {
+    background: #a0aec0;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.control-row {
+    display: flex;
+    justify-content: center;
+}
+
+.reset-btn {
+    background: #e53e3e;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(229, 62, 62, 0.3);
+}
+
+.reset-btn:hover {
+    background: #c53030;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(229, 62, 62, 0.4);
+}
+
+.level-controls {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.next-btn {
+    background: #38a169;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(56, 161, 105, 0.3);
+}
+
+.next-btn:hover {
+    background: #2f855a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(56, 161, 105, 0.4);
+}
+
+.readme-btn {
+    background: #4299e1;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(66, 153, 225, 0.3);
+}
+
+.readme-btn:hover {
+    background: #3182ce;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(66, 153, 225, 0.4);
+}
+
+.game-status {
+    text-align: center;
+    padding: 15px;
+    background: #edf2f7;
+    border-radius: 8px;
+    color: #4a5568;
+    font-weight: 500;
+}
+
+.game-status.success {
+    background: #c6f6d5;
+    color: #22543d;
+    border: 2px solid #68d391;
+}
+
+.game-status.failure {
+    background: #fed7d7;
+    color: #742a2a;
+    border: 2px solid #fc8181;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .game-area {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .game-grid {
+        grid-template-columns: repeat(10, 35px);
+        grid-template-rows: repeat(10, 35px);
+    }
+    
+    .grid-cell {
+        width: 35px;
+        height: 35px;
+        font-size: 1em;
+    }
+    
+    .energy-grid {
+        grid-template-columns: repeat(5, 25px);
+        grid-template-rows: repeat(2, 25px);
+    }
+    
+    .energy-tile {
+        width: 25px;
+        height: 25px;
+    }
+}
+
+/* Modal Styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    max-width: 600px;
+    max-height: 80vh;
+    width: 90%;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.modal-header {
+    background: #4299e1;
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2em;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+
+.close-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.modal-body {
+    padding: 20px;
+    max-height: 60vh;
+    overflow-y: auto;
+    line-height: 1.6;
+}
+
+.modal-body h1, .modal-body h2, .modal-body h3 {
+    color: #2d3748;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.modal-body h1 {
+    font-size: 1.8em;
+    border-bottom: 2px solid #4299e1;
+    padding-bottom: 10px;
+}
+
+.modal-body h2 {
+    font-size: 1.4em;
+    color: #4299e1;
+}
+
+.modal-body h3 {
+    font-size: 1.2em;
+    color: #4a5568;
+}
+
+.modal-body p {
+    margin-bottom: 15px;
+    color: #4a5568;
+}
+
+.modal-body ul, .modal-body ol {
+    margin-bottom: 15px;
+    padding-left: 20px;
+}
+
+.modal-body li {
+    margin-bottom: 5px;
+    color: #4a5568;
+}
+
+.modal-body code {
+    background: #f7fafc;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    color: #e53e3e;
+}
+
+.modal-body pre {
+    background: #f7fafc;
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin-bottom: 15px;
+}
+
+.modal-body pre code {
+    background: none;
+    padding: 0;
+    color: #2d3748;
+}
